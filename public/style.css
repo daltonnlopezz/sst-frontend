@@ -37,9 +37,23 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: var(--dark-color);
+    color: #2c3e50;
     background-color: var(--light-color);
     overflow-x: hidden;
+    font-weight: 400;
+}
+
+/* Section Headers */
+.display-5 {
+    color: #2c3e50;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.lead {
+    color: #495057;
+    font-weight: 400;
+    line-height: 1.6;
 }
 
 html {
@@ -80,17 +94,24 @@ html {
     line-height: 1.2;
     font-weight: 700;
     color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
 }
 
 .hero-section h2 {
     font-size: 1.5rem;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.9);
+    font-weight: 400;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
 }
 
 .hero-section .lead {
-    color: rgba(255, 255, 255, 0.9);
+    color: white;
     font-size: 1.25rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 400;
+    line-height: 1.6;
 }
 
 /* Dashboard Preview */
@@ -227,14 +248,17 @@ html {
 
 .feature-card h4 {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--dark-color);
+    color: #2c3e50;
+    line-height: 1.3;
 }
 
 .feature-card p {
-    color: var(--secondary-color);
+    color: #495057;
     line-height: 1.6;
+    font-size: 0.95rem;
+    font-weight: 400;
 }
 
 /* Demo Section */
@@ -260,7 +284,8 @@ html {
 .demo-header h3 {
     margin: 0;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .demo-content {
@@ -280,15 +305,17 @@ html {
 
 .stat-number {
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--primary-color);
     line-height: 1;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
-    color: var(--secondary-color);
-    font-size: 0.875rem;
+    color: #495057;
+    font-size: 0.9rem;
     margin-top: 0.5rem;
+    font-weight: 500;
 }
 
 .demo-features {
@@ -301,18 +328,26 @@ html {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem;
+    padding: 1rem;
     background: #f8f9fa;
     border-radius: 8px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
 }
 
 .feature-item:hover {
     background: #e9ecef;
+    transform: translateX(5px);
 }
 
 .feature-item i {
     font-size: 1.25rem;
+    color: var(--success-color);
+}
+
+.feature-item span {
+    color: #2c3e50;
+    font-weight: 500;
 }
 
 /* ===== FLASK APP STYLES ===== */
