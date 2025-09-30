@@ -1,0 +1,636 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SST 2.0{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </h1>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                </button>
+                <button type="button" class="btn btn-primary" onclick="showEmailRequestModal()">
+                    <i class="fas fa-envelope me-1"></i>Send Email Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Opportunities
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalOpportunities">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-list fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Active Opportunities
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="activeOpportunities">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Recent (7 days)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="recentOpportunities">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clock fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Email Queue
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="emailQueueStatus">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Agency Distribution Chart -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Top Agencies</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="agencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAICS Distribution Chart -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Top NAICS Codes</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="naicsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Opportunities Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Opportunities</h6>
+                <button class="btn btn-sm btn-primary" onclick="showOpportunities()">
+                    View All
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="recentOpportunitiesTable">
+                        <thead>
+                            <tr>
+                                <th>Notice ID</th>
+                                <th>Title</th>
+                                <th>Agency</th>
+                                <th>Posted Date</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email Request Modal -->
+<div class="modal fade" id="emailRequestModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-envelope me-2"></i>Send Email Request
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="emailRequestForm">
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Your Email Address</label>
+                        <input type="email" class="form-control" id="userEmail" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="requestType" class="form-label">Request Type</label>
+                        <select class="form-select" id="requestType" required>
+                            <option value="evaluate">Evaluate Opportunity</option>
+                            <option value="deliverables">Generate Deliverables Table</option>
+                            <option value="proposal">Extract Proposal Requirements</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="noticeIds" class="form-label">Notice IDs (one per line)</label>
+                        <textarea class="form-control" id="noticeIds" rows="4" 
+                                  placeholder="ABC123456789&#10;XYZ987654321&#10;DEF456789012" required></textarea>
+                        <div class="form-text">Enter one Notice ID per line</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendEmailRequest()">
+                    <i class="fas fa-paper-plane me-1"></i>Send Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Opportunity Detail Modal -->
+<div class="modal fade" id="opportunityModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="opportunityModalTitle">
+                    <i class="fas fa-file-alt me-2"></i>Opportunity Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="opportunityModalBody">
+                <!-- Opportunity details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="evaluateOpportunity()">
+                    <i class="fas fa-search me-1"></i>Evaluate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Dashboard-specific JavaScript
+let currentOpportunity = null;
+
+// Load dashboard data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+    loadRecentOpportunities();
+    loadEmailQueueStatus();
+});
+
+// Load dashboard statistics
+async function loadDashboardData() {
+    try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        
+        if (response.ok) {
+            document.getElementById('totalOpportunities').textContent = data.total_opportunities.toLocaleString();
+            document.getElementById('activeOpportunities').textContent = data.active_opportunities.toLocaleString();
+            document.getElementById('recentOpportunities').textContent = data.recent_opportunities.toLocaleString();
+            
+            // Create charts
+            createAgencyChart(data.top_agencies);
+            createNaicsChart(data.top_naics);
+        } else {
+            console.error('Error loading dashboard data:', data.error);
+        }
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
+    }
+}
+
+// Load recent opportunities
+async function loadRecentOpportunities() {
+    try {
+        const response = await fetch('/api/opportunities?per_page=5&sort_by=posted_date&sort_order=desc');
+        const data = await response.json();
+        
+        if (response.ok) {
+            const tbody = document.querySelector('#recentOpportunitiesTable tbody');
+            tbody.innerHTML = '';
+            
+            data.opportunities.forEach(opp => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><code>${opp.notice_id || 'N/A'}</code></td>
+                    <td>${opp.title ? opp.title.substring(0, 50) + '...' : 'N/A'}</td>
+                    <td>${opp.full_parent_path_name || 'N/A'}</td>
+                    <td>${opp.posted_date ? new Date(opp.posted_date).toLocaleDateString() : 'N/A'}</td>
+                    <td>${opp.response_deadline ? new Date(opp.response_deadline).toLocaleDateString() : 'N/A'}</td>
+                    <td><span class="badge ${opp.active === 'Yes' ? 'bg-success' : 'bg-secondary'}">${opp.active || 'Unknown'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewOpportunity('${opp.notice_id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            console.error('Error loading recent opportunities:', data.error);
+        }
+    } catch (error) {
+        console.error('Error loading recent opportunities:', error);
+    }
+}
+
+// Load email queue status
+async function loadEmailQueueStatus() {
+    try {
+        const response = await fetch('/api/email/queue');
+        const data = await response.json();
+        
+        if (response.ok) {
+            const pending = data.pending_count || 0;
+            const processing = data.status_counts?.processing || 0;
+            const completed = data.status_counts?.completed || 0;
+            const failed = data.status_counts?.failed || 0;
+            
+            document.getElementById('emailQueueStatus').innerHTML = `
+                <div class="small">
+                    <div>Pending: ${pending}</div>
+                    <div>Processing: ${processing}</div>
+                    <div>Completed: ${completed}</div>
+                    <div>Failed: ${failed}</div>
+                </div>
+            `;
+        } else {
+            console.error('Error loading email queue status:', data.error);
+        }
+    } catch (error) {
+        console.error('Error loading email queue status:', error);
+    }
+}
+
+// Create agency distribution chart
+function createAgencyChart(agencies) {
+    const ctx = document.getElementById('agencyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: agencies.slice(0, 5).map(a => a[0]),
+            datasets: [{
+                data: agencies.slice(0, 5).map(a => a[1]),
+                backgroundColor: [
+                    '#4e73df',
+                    '#1cc88a',
+                    '#36b9cc',
+                    '#f6c23e',
+                    '#e74a3b'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+// Create NAICS distribution chart
+function createNaicsChart(naics) {
+    const ctx = document.getElementById('naicsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: naics.slice(0, 5).map(n => n[0]),
+            datasets: [{
+                label: 'Opportunities',
+                data: naics.slice(0, 5).map(n => n[1]),
+                backgroundColor: '#4e73df'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Show email request modal
+function showEmailRequestModal() {
+    const modal = new bootstrap.Modal(document.getElementById('emailRequestModal'));
+    modal.show();
+}
+
+// Send email request
+async function sendEmailRequest() {
+    const userEmail = document.getElementById('userEmail').value;
+    const requestType = document.getElementById('requestType').value;
+    const noticeIdsText = document.getElementById('noticeIds').value;
+    
+    if (!userEmail || !noticeIdsText) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+    
+    const noticeIds = noticeIdsText.split('\n').map(id => id.trim()).filter(id => id);
+    
+    if (noticeIds.length === 0) {
+        showToast('Please enter at least one Notice ID', 'error');
+        return;
+    }
+    
+    try {
+        showLoading('Sending email request...');
+        
+        const response = await fetch('/api/email/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_email: userEmail,
+                request_type: requestType,
+                notice_ids: noticeIds
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast(`Email request sent successfully! ${data.item_ids.length} items added to queue.`, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('emailRequestModal')).hide();
+            document.getElementById('emailRequestForm').reset();
+            loadEmailQueueStatus();
+        } else {
+            showToast(`Error: ${data.error}`, 'error');
+        }
+    } catch (error) {
+        showToast(`Error: ${error.message}`, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// View opportunity details
+async function viewOpportunity(noticeId) {
+    try {
+        showLoading('Loading opportunity details...');
+        
+        const response = await fetch(`/api/opportunities/${noticeId}`);
+        const opportunity = await response.json();
+        
+        if (response.ok) {
+            currentOpportunity = opportunity;
+            showOpportunityModal(opportunity);
+        } else {
+            showToast(`Error: ${opportunity.error}`, 'error');
+        }
+    } catch (error) {
+        showToast(`Error: ${error.message}`, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// Show opportunity modal
+function showOpportunityModal(opportunity) {
+    document.getElementById('opportunityModalTitle').innerHTML = `
+        <i class="fas fa-file-alt me-2"></i>${opportunity.title || 'Opportunity Details'}
+    `;
+    
+    document.getElementById('opportunityModalBody').innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Basic Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Notice ID:</strong></td><td><code>${opportunity.notice_id || 'N/A'}</code></td></tr>
+                    <tr><td><strong>Title:</strong></td><td>${opportunity.title || 'N/A'}</td></tr>
+                    <tr><td><strong>Agency:</strong></td><td>${opportunity.full_parent_path_name || 'N/A'}</td></tr>
+                    <tr><td><strong>Type:</strong></td><td>${opportunity.type || 'N/A'}</td></tr>
+                    <tr><td><strong>NAICS Code:</strong></td><td>${opportunity.naics_code || 'N/A'}</td></tr>
+                    <tr><td><strong>Set-Aside:</strong></td><td>${opportunity.type_of_set_aside_description || 'N/A'}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Timeline</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Posted Date:</strong></td><td>${opportunity.posted_date ? new Date(opportunity.posted_date).toLocaleDateString() : 'N/A'}</td></tr>
+                    <tr><td><strong>Response Deadline:</strong></td><td>${opportunity.response_deadline ? new Date(opportunity.response_deadline).toLocaleDateString() : 'N/A'}</td></tr>
+                    <tr><td><strong>Active:</strong></td><td><span class="badge ${opportunity.active === 'Yes' ? 'bg-success' : 'bg-secondary'}">${opportunity.active || 'Unknown'}</span></td></tr>
+                </table>
+                
+                <h6>Contact Information</h6>
+                <p class="small">${opportunity.point_of_contact || 'No contact information available'}</p>
+                
+                ${opportunity.ui_link ? `<a href="${opportunity.ui_link}" target="_blank" class="btn btn-sm btn-outline-primary">View on SAM.gov</a>` : ''}
+            </div>
+        </div>
+        
+        ${opportunity.description ? `
+        <div class="mt-3">
+            <h6>Description</h6>
+            <div class="border p-3 rounded" style="max-height: 300px; overflow-y: auto;">
+                ${opportunity.description}
+            </div>
+        </div>
+        ` : ''}
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('opportunityModal'));
+    modal.show();
+}
+
+// Evaluate opportunity
+async function evaluateOpportunity() {
+    if (!currentOpportunity) {
+        showToast('No opportunity selected', 'error');
+        return;
+    }
+    
+    try {
+        showLoading('Evaluating opportunity...');
+        
+        const response = await fetch(`/api/opportunities/${currentOpportunity.notice_id}/evaluate`, {
+            method: 'POST'
+        });
+        
+        const evaluation = await response.json();
+        
+        if (response.ok) {
+            showEvaluationResults(evaluation);
+        } else {
+            showToast(`Error: ${evaluation.error}`, 'error');
+        }
+    } catch (error) {
+        showToast(`Error: ${error.message}`, 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+// Show evaluation results
+function showEvaluationResults(evaluation) {
+    const modalBody = document.getElementById('opportunityModalBody');
+    modalBody.innerHTML = `
+        <div class="alert alert-info">
+            <h6><i class="fas fa-search me-2"></i>Evaluation Results</h6>
+            <p class="mb-0">${evaluation.title}</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Opportunity Details</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Agency:</strong></td><td>${evaluation.agency || 'N/A'}</td></tr>
+                    <tr><td><strong>Posted Date:</strong></td><td>${evaluation.posted_date ? new Date(evaluation.posted_date).toLocaleDateString() : 'N/A'}</td></tr>
+                    <tr><td><strong>Response Deadline:</strong></td><td>${evaluation.response_deadline ? new Date(evaluation.response_deadline).toLocaleDateString() : 'N/A'}</td></tr>
+                    <tr><td><strong>Type:</strong></td><td>${evaluation.type || 'N/A'}</td></tr>
+                    <tr><td><strong>Set-Aside:</strong></td><td>${evaluation.set_aside_type || 'N/A'}</td></tr>
+                    <tr><td><strong>NAICS:</strong></td><td>${evaluation.naics_code || 'N/A'}</td></tr>
+                    <tr><td><strong>Status:</strong></td><td><span class="badge ${evaluation.active === 'Yes' ? 'bg-success' : 'bg-secondary'}">${evaluation.active || 'Unknown'}</span></td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Recommendations</h6>
+                <ul class="list-group">
+                    ${evaluation.recommendations.map(rec => `<li class="list-group-item">${rec}</li>`).join('')}
+                </ul>
+            </div>
+        </div>
+        
+        ${evaluation.description ? `
+        <div class="mt-3">
+            <h6>Description</h6>
+            <div class="border p-3 rounded" style="max-height: 200px; overflow-y: auto;">
+                ${evaluation.description}
+            </div>
+        </div>
+        ` : ''}
+        
+        ${evaluation.ui_link ? `
+        <div class="mt-3">
+            <a href="${evaluation.ui_link}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-external-link-alt me-1"></i>View on SAM.gov
+            </a>
+        </div>
+        ` : ''}
+    `;
+}
+
+// Refresh dashboard
+function refreshDashboard() {
+    loadDashboardData();
+    loadRecentOpportunities();
+    loadEmailQueueStatus();
+    showToast('Dashboard refreshed', 'success');
+}
+
+// Navigation functions
+function showOpportunities() {
+    // This would navigate to the opportunities page
+    showToast('Opportunities page - Coming soon!', 'info');
+}
+
+function showEmailQueue() {
+    // This would navigate to the email queue page
+    showToast('Email queue page - Coming soon!', 'info');
+}
+
+function showAnalytics() {
+    // This would navigate to the analytics page
+    showToast('Analytics page - Coming soon!', 'info');
+}
+
+function showEmailSettings() {
+    // This would navigate to the email settings page
+    showToast('Email settings page - Coming soon!', 'info');
+}
+
+function showSystemStatus() {
+    // This would navigate to the system status page
+    showToast('System status page - Coming soon!', 'info');
+}
+</script>
+{% endblock %}
+
+
+
