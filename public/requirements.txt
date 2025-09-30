@@ -1,0 +1,17 @@
+# SST 2.0 Backend API Requirements
+
+# Web Framework
+Flask==2.3.3
+Flask-CORS==4.0.0
+
+# Database
+# (Uses existing database modules from parent directory)
+
+# Development
+Werkzeug==2.3.7
+
+# Production server
+gunicorn==21.2.0
+
+# Additional dependencies
+requests==2.31.0

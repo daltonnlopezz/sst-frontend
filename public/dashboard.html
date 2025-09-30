@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SST 2.0</title>
+    <meta name="description" content="SST 2.0 Dashboard - Manage your government contract opportunities">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Authentication Check -->
+    <div id="authCheck" class="d-none">
+        <div class="auth-overlay">
+            <div class="auth-modal">
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                    <p>Verifying authentication...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Required Modal -->
+    <div id="loginRequired" class="d-none">
+        <div class="auth-overlay">
+            <div class="auth-modal">
+                <div class="text-center">
+                    <i class="fas fa-lock text-warning mb-3" style="font-size: 3rem;"></i>
+                    <h3 class="text-white mb-3">Authentication Required</h3>
+                    <p class="text-light mb-4">Please log in to access your personalized dashboard.</p>
+                    <a href="auth.html" class="btn btn-warning btn-lg btn-enhanced me-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                    <a href="index.html" class="btn btn-outline-light btn-lg btn-animated">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="static/images/Dbear Industries T.png" alt="Dbear Industries Logo" class="logo-image" />
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top navbar-enhanced" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="fas fa-search me-2"></i>SST 2.0
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#demo">Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light me-2 btn-animated" href="auth.html">
+                            <i class="fas fa-user me-1"></i>Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light me-2 btn-animated" href="database.html">
+                            <i class="fas fa-table me-1"></i>Opportunities Database
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-warning ms-2 btn-enhanced" href="https://sst-2-frontend.onrender.com" target="_blank">
+                            <i class="fas fa-external-link-alt me-1"></i>Launch App
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content (Only shown when authenticated) -->
+    <main id="dashboardContent" class="d-none" style="padding-top: 80px;">
+        <!-- Hero Section -->
+        <section class="hero-enhanced py-5">
+            <!-- Particle Background -->
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-4 fw-bold text-white mb-4 animate-fade-in-left">
+                            Welcome back, <span id="userFirstName" class="text-warning text-shimmer">User</span>!
+                        </h1>
+                        <p class="lead text-light mb-4 animate-fade-in-left" style="animation-delay: 0.2s;">
+                            Manage your government contract opportunities for <span id="companyName" class="text-warning">Your Company</span>, 
+                            track progress, and analyze your success metrics.
+                        </p>
+                        <div class="animate-fade-in-left" style="animation-delay: 0.4s;">
+                            <a href="https://sst-2-frontend.onrender.com" class="btn btn-warning btn-lg btn-enhanced me-3" target="_blank">
+                                <i class="fas fa-rocket me-2"></i>Access Full Dashboard
+                            </a>
+                            <a href="auth.html" class="btn btn-outline-light btn-lg btn-animated">
+                                <i class="fas fa-cog me-2"></i>Account Settings
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="text-center animate-fade-in-right">
+                            <i class="fas fa-chart-pie text-warning" style="font-size: 8rem; opacity: 0.8;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-4 text-gradient scroll-reveal">Your Performance</h2>
+                        <p class="lead text-muted scroll-reveal" style="animation-delay: 0.2s;">
+                            Track your progress and success metrics
+                        </p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card card-enhanced text-center interactive-card scroll-reveal">
+                            <div class="card-body">
+                                <div class="feature-icon animate-pulse mb-3">
+                                    <i class="fas fa-search text-primary"></i>
+                                </div>
+                                <h3 class="counter text-primary" id="opportunitiesAnalyzed">0</h3>
+                                <p class="text-muted mb-0">Opportunities Analyzed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card card-enhanced text-center interactive-card scroll-reveal" style="animation-delay: 0.2s;">
+                            <div class="card-body">
+                                <div class="feature-icon animate-pulse mb-3" style="animation-delay: 0.5s;">
+                                    <i class="fas fa-paper-plane text-success"></i>
+                                </div>
+                                <h3 class="counter text-success" id="proposalsSubmitted">0</h3>
+                                <p class="text-muted mb-0">Proposals Submitted</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card card-enhanced text-center interactive-card scroll-reveal" style="animation-delay: 0.4s;">
+                            <div class="card-body">
+                                <div class="feature-icon animate-pulse mb-3" style="animation-delay: 1s;">
+                                    <i class="fas fa-trophy text-warning"></i>
+                                </div>
+                                <h3 class="counter text-warning" id="contractsWon">0</h3>
+                                <p class="text-muted mb-0">Contracts Won</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card card-enhanced text-center interactive-card scroll-reveal" style="animation-delay: 0.6s;">
+                            <div class="card-body">
+                                <div class="feature-icon animate-pulse mb-3" style="animation-delay: 1.5s;">
+                                    <i class="fas fa-percentage text-info"></i>
+                                </div>
+                                <h3 class="counter text-info" id="winRate">0%</h3>
+                                <p class="text-muted mb-0">Win Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Profile & Company Info -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-4 text-gradient scroll-reveal">Your Profile</h2>
+                        <p class="lead text-muted scroll-reveal" style="animation-delay: 0.2s;">
+                            Your company information and capabilities
+                        </p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card card-enhanced scroll-reveal">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Name:</strong>
+                                        <p id="userFullName" class="text-muted">Loading...</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Email:</strong>
+                                        <p id="userEmail" class="text-muted">Loading...</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Job Title:</strong>
+                                        <p id="userJobTitle" class="text-muted">Loading...</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Phone:</strong>
+                                        <p id="userPhone" class="text-muted">Loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card card-enhanced scroll-reveal" style="animation-delay: 0.2s;">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-building me-2"></i>Company Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Company:</strong>
+                                        <p id="companyNameDetail" class="text-muted">Loading...</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>DUNS:</strong>
+                                        <p id="companyDuns" class="text-muted">Loading...</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Primary NAICS:</strong>
+                                        <p id="primaryNaics" class="text-muted">Loading...</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <strong>Primary PSC:</strong>
+                                        <p id="primaryPsc" class="text-muted">Loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-4 text-gradient scroll-reveal">Recent Activity</h2>
+                        <p class="lead text-muted scroll-reveal" style="animation-delay: 0.2s;">
+                            Your latest opportunity interactions
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card card-enhanced scroll-reveal">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Activity Timeline</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="activityTimeline">
+                                    <div class="text-center py-4">
+                                        <div class="spinner"></div>
+                                        <p class="text-muted mt-3">Loading your activity...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center mb-5">
+                        <h2 class="display-5 fw-bold mb-4 text-gradient scroll-reveal">Quick Actions</h2>
+                        <p class="lead text-muted scroll-reveal" style="animation-delay: 0.2s;">
+                            Get started with these common tasks
+                        </p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card card-enhanced h-100 interactive-card scroll-reveal">
+                            <div class="card-body text-center">
+                                <div class="feature-icon animate-pulse mb-3">
+                                    <i class="fas fa-database text-primary"></i>
+                                </div>
+                                <h5>Opportunities Database</h5>
+                                <p class="text-muted">Browse and filter the full SAM opportunities database. Read-only, mark interest locally.</p>
+                                <a href="database.html" class="btn btn-primary btn-enhanced">
+                                    <i class="fas fa-table me-2"></i>Open Database
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-enhanced h-100 interactive-card scroll-reveal" style="animation-delay: 0.2s;">
+                            <div class="card-body text-center">
+                                <div class="feature-icon animate-pulse mb-3" style="animation-delay: 0.5s;">
+                                    <i class="fas fa-envelope text-success"></i>
+                                </div>
+                                <h5>Email Analysis</h5>
+                                <p class="text-muted">Send Notice IDs via email for instant analysis and proposal requirements.</p>
+                                <a href="https://sst-2-frontend.onrender.com" class="btn btn-success btn-enhanced" target="_blank">
+                                    <i class="fas fa-envelope me-2"></i>Send Email
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-enhanced h-100 interactive-card scroll-reveal" style="animation-delay: 0.4s;">
+                            <div class="card-body text-center">
+                                <div class="feature-icon animate-pulse mb-3" style="animation-delay: 1s;">
+                                    <i class="fas fa-chart-bar text-warning"></i>
+                                </div>
+                                <h5>View Analytics</h5>
+                                <p class="text-muted">Analyze your performance with detailed charts and reports.</p>
+                                <a href="https://sst-2-frontend.onrender.com" class="btn btn-warning btn-enhanced" target="_blank">
+                                    <i class="fas fa-chart-bar me-2"></i>View Reports
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-search me-2"></i>SST 2.0
+                    </h5>
+                    <p class="text-light">
+                        Advanced government contract opportunity tracking, analysis, and email integration. 
+                        Streamline your procurement process with intelligent matching and automated workflows.
+                    </p>
+                </div>
+                <div class="col-lg-2 mb-4">
+                    <h6 class="fw-bold mb-3">Product</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html#features" class="text-light text-decoration-none">Features</a></li>
+                        <li><a href="index.html#demo" class="text-light text-decoration-none">Demo</a></li>
+                        <li><a href="https://sst-2-frontend.onrender.com" class="text-light text-decoration-none" target="_blank">Launch App</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 mb-4">
+                    <h6 class="fw-bold mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html#contact" class="text-light text-decoration-none">Contact</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">About</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 mb-4">
+                    <h6 class="fw-bold mb-3">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Terms of Service</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 mb-4">
+                    <h6 class="fw-bold mb-3">Connect</h6>
+                    <div class="social-links">
+                        <a href="#" class="text-light me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-github fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fas fa-envelope fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 SST 2.0. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Powered by <span class="text-warning">Dbear Industries</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    <!-- Enhanced Interactive JS -->
+    <script src="enhanced.js"></script>
+    <!-- Dashboard JS -->
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - SST 2.0</title>
+    <meta name="description" content="Verify your email address to complete registration">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="static/images/Dbear Industries T.png" alt="Dbear Industries Logo" class="logo-image" />
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary navbar-enhanced">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="fas fa-search me-2"></i>SST 2.0
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+                <a class="nav-link" href="auth.html">
+                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Verification Container -->
+    <div class="auth-container hero-enhanced">
+        <!-- Particle Background -->
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-xl-5">
+                    <div class="auth-card card-enhanced animate-fade-in-up">
+                        <!-- Verification Header -->
+                        <div class="auth-header text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-envelope-open-text text-warning" style="font-size: 4rem;"></i>
+                            </div>
+                            <h2 class="auth-title text-gradient">Verify Your Email</h2>
+                            <p class="auth-subtitle">We've sent a verification code to your email address</p>
+                        </div>
+
+                        <!-- Verification Form -->
+                        <div class="auth-form">
+                            <form id="verificationForm">
+                                <div class="mb-4">
+                                    <label for="verificationCode" class="form-label">Enter Verification Code</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                        <input type="text" class="form-control form-control-lg text-center" 
+                                               id="verificationCode" name="verificationCode" 
+                                               placeholder="000000" maxlength="6" required>
+                                    </div>
+                                    <div class="form-text">Enter the 6-digit code sent to your email</div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-success btn-lg btn-enhanced">
+                                            <i class="fas fa-check me-2"></i>Verify Email
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <p class="text-muted mb-2">Didn't receive the code?</p>
+                                    <button type="button" class="btn btn-outline-primary" id="resendCode">
+                                        <i class="fas fa-redo me-2"></i>Resend Code
+                                    </button>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <div class="countdown-timer">
+                                        <small class="text-muted">Resend available in <span id="countdown">60</span> seconds</small>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Success Message -->
+                            <div id="successMessage" class="d-none">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-check-circle text-success mb-3" style="font-size: 4rem;"></i>
+                                    <h4 class="text-success mb-3">Email Verified!</h4>
+                                    <p class="text-muted mb-4">Your email has been successfully verified. You can now access your dashboard.</p>
+                                    <a href="dashboard.html" class="btn btn-primary btn-lg btn-enhanced">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Email Verification JS -->
+    <script src="email_verification.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    <!-- Enhanced Interactive JS -->
+    <script src="enhanced.js"></script>
+    <!-- Verification Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const verificationForm = document.getElementById('verificationForm');
+            const resendButton = document.getElementById('resendCode');
+            const countdownElement = document.getElementById('countdown');
+            const successMessage = document.getElementById('successMessage');
+            
+            let countdown = 60;
+            let countdownInterval;
+
+            // Get email from URL parameters or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email') || JSON.parse(localStorage.getItem('sst_user_data') || '{}').email;
+
+            // Start countdown
+            startCountdown();
+
+            // Handle form submission
+            verificationForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const code = document.getElementById('verificationCode').value;
+                
+                if (code.length !== 6) {
+                    showError('Please enter a valid 6-digit code');
+                    return;
+                }
+
+                try {
+                    const result = window.emailVerification.verifyCode(email, code);
+                    
+                    if (result.success) {
+                        // Mark email as verified in localStorage
+                        const userData = JSON.parse(localStorage.getItem('sst_user_data') || '{}');
+                        userData.emailVerified = true;
+                        localStorage.setItem('sst_user_data', JSON.stringify(userData));
+                        
+                        // Show success message
+                        verificationForm.classList.add('d-none');
+                        successMessage.classList.remove('d-none');
+                    } else {
+                        showError(result.message);
+                    }
+                } catch (error) {
+                    showError('Verification failed. Please try again.');
+                }
+            });
+
+            // Handle resend code
+            resendButton.addEventListener('click', async function() {
+                if (countdown > 0) {
+                    showError(`Please wait ${countdown} seconds before requesting a new code`);
+                    return;
+                }
+
+                try {
+                    const result = await window.emailVerification.resendVerificationCode(email);
+                    if (result.success) {
+                        showSuccess('New verification code sent!');
+                        countdown = 60;
+                        startCountdown();
+                    } else {
+                        showError(result.message);
+                    }
+                } catch (error) {
+                    showError('Failed to resend code. Please try again.');
+                }
+            });
+
+            // Start countdown timer
+            function startCountdown() {
+                countdown = 60;
+                resendButton.disabled = true;
+                
+                countdownInterval = setInterval(() => {
+                    countdown--;
+                    countdownElement.textContent = countdown;
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        resendButton.disabled = false;
+                        countdownElement.textContent = '0';
+                    }
+                }, 1000);
+            }
+
+            // Show error message
+            function showError(message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-exclamation-triangle me-2"></i>${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                verificationForm.insertBefore(alertDiv, verificationForm.firstChild);
+                
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
+
+            // Show success message
+            function showSuccess(message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                verificationForm.insertBefore(alertDiv, verificationForm.firstChild);
+                
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
